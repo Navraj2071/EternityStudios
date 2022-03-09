@@ -7,8 +7,16 @@ import AppContext from "../AppContext";
 const navbar = () => {
   const { account, chainId, activateBrowserWallet, deactivate } = useEthers();
 
-  const value = useContext(AppContext);
   const isConnected = account !== undefined;
+
+  const accountShow =
+    account === undefined
+      ? ""
+      : account.substring(0, 4) +
+        "..." +
+        account.substring(account.length - 3, account.length);
+
+  const profilelink = account === undefined ? "#" : "/profile/" + account;
 
   const activateButton = () => {
     return (
@@ -65,7 +73,21 @@ const navbar = () => {
         {isConnected ? deactivateButton() : activateButton()}
         {account && (
           <>
-            <Link href="/">{account}</Link>
+            <Link href={profilelink}>
+              <button
+                className="btn"
+                style={{
+                  margin: "auto",
+                  padding: "5px",
+                  fontSize: "20px",
+                  color: "grey",
+                  borderColor: "grey",
+                  backgroundColor: "rgba(10, 255, 21, 0.2)",
+                }}
+              >
+                {accountShow}
+              </button>
+            </Link>
           </>
         )}
       </div>

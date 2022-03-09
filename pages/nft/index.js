@@ -8,7 +8,6 @@ import { Slideshow } from "../../custom_modules/slideshow";
 
 const DeployArticle = () => {
   const title = "Deploy NFTs";
-  const tagLine = "Non Fungible Tokens";
   const text = "Deploy your NFT directly on chain. We don't use lazy-minting.";
 
   const src =
@@ -37,25 +36,30 @@ const DeployArticle = () => {
 };
 
 const ExploreArticle = () => {
-  const [windowWidth, setWindowWidth] = useState(undefined);
-  const [noOfElements, setNoOfElements] = useState(1);
+  const [windowWidth, setWindowWidth] = useState(1080);
+  const [noOfElements, setNoOfElements] = useState(3);
   const [imgWidth, setImgWidth] = useState(200);
+  const [isBrowser, setIsBrowser] = useState(false);
   const checkSize = () => {
     setWindowWidth(window.innerWidth);
   };
 
   useEffect(() => {
+    console.log(typeof window);
+    console.log(document.readyState);
+    console.log(windowWidth);
     if (typeof window !== "undefined") {
-      console.log(window.innerWidth);
-      setWindowWidth(window.innerWidth);
+      setIsBrowser(true);
+      checkSize;
       setNoOfElements(
         Math.max(Math.round((windowWidth * 0.8 - 20) / 200) - 2, 1)
       );
       setImgWidth((windowWidth * 0.8 - 20) / (noOfElements + 2));
       setWindowWidth(window.innerWidth);
-
-      window.addEventListener("resize", checkSize);
+    } else {
+      setWindowWidth(1080);
     }
+    window.addEventListener("resize", checkSize);
     return () => {
       window.removeEventListener("resize", checkSize);
     };
@@ -89,7 +93,7 @@ const ExploreArticle = () => {
         <h2>{text}</h2>
       </div>
 
-      <div className="illustration">{Slide}</div>
+      <div className="illustration">{isBrowser ? Slide : ""}</div>
       <div className="writing">
         <button className="btn">Explore more</button>
       </div>

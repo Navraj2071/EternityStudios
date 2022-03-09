@@ -6,9 +6,13 @@ import { DAppProvider, ChainId } from "@usedapp/core";
 function MyApp({ Component, pageProps }) {
   const [isConnected, setIsConnected] = useState(undefined);
   const [userAccount, setAccount] = useState(undefined);
+  const config = {
+    multicallAddresses: { 4: "Network Rinkeby" },
+    networks: [ChainId.Rinkeby, ChainId.Mainnet],
+  };
 
   return (
-    <DAppProvider config={{ networks: [ChainId.Kovan, ChainId.Rinkeby] }}>
+    <DAppProvider config={config}>
       <Component {...pageProps} />
     </DAppProvider>
   );
