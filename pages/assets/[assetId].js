@@ -3,7 +3,6 @@ import Footer from "../../custom_modules/footer";
 
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
-import { ChainId, useEthers } from "@usedapp/core";
 
 const AssetPage = ({ assetData }) => {
   if (assetData["response"] === "Server error") {
@@ -32,6 +31,7 @@ const AssetPage = ({ assetData }) => {
   }, []);
   const getNftIPFSData = async () => {
     let ipfsURL = assetData["assetMetadataURL"];
+    console.log(ipfsURL);
     let response = await fetch(ipfsURL);
     let nftData = await response.json();
     setImageURL(nftData["image"]);
@@ -44,7 +44,7 @@ const AssetPage = ({ assetData }) => {
   const NFTCard = () => {
     return (
       <>
-        <div className="nft-mint">
+        <div className="nft-mint" style={{ minHeight: "80vh" }}>
           <img src={imageURL} alt="NFT" />
           <div className="nft-mint-2">
             <div className="nft-description">

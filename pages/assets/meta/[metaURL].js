@@ -9,7 +9,7 @@ export default AssetPagewithMeta;
 
 const getAssetData = async (assetId) => {
   let response = await fetch(
-    "http://localhost:8000/nft/getNFT?request_type=withMetadata&metadataURL=https://ipfs.io/ipfs/" +
+    "http://localhost:8000/nft/getNFT?request_type=withMetadata&metadataURL=" +
       assetId
   )
     .then((resp) => {
@@ -26,13 +26,9 @@ const getAssetData = async (assetId) => {
 
 export async function getServerSideProps(context) {
   const queryData = context.params.metaURL;
-  const queryAsset = queryData.split("_")[0] + "?" + queryData.split("_")[1];
-
-  //   return {
-  //     props: {
-  //       assetData: { assetQuery: queryAsset },
-  //     },
-  //   };
+  let metaURL1 = queryData.replaceAll("questionmarketernity", "?");
+  let metaURL2 = metaURL1.replaceAll("slasheternity", "/");
+  const queryAsset = "https://" + metaURL2.replaceAll("doteternity", ".");
   const assetData = await getAssetData(queryAsset);
 
   if (assetData === "Server error") {

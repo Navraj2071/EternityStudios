@@ -125,7 +125,52 @@ const Article = () => {
     setTraitState(temp);
   };
 
+  const getRandomKey = (starterString) => {
+    let randomKey =
+      Math.floor(Math.random() * 10000, 4).toString() +
+      starterString.toString();
+    return randomKey;
+  };
+
   const Page4 = () => {
+    const lazy = async () => {
+      let formData = new FormData();
+      formData.append(
+        "collection_id",
+        account + defaultForm[0].replace(/\s+/g, "")
+      );
+      formData.append("collection_name", defaultForm[0]);
+      formData.append("collection_description", defaultForm[1]);
+      formData.append("total_supply", defaultForm[2]);
+      formData.append("price", price);
+      formData.append("launch_date", launchDate);
+      formData.append("launch_time", launchTime);
+      formData.append("owner", account);
+      formData.append("contract", "0x");
+      formData.append("network", chainId);
+      let collectionData = {};
+      imageNameArray.map((item) => {
+        let itemIndex = imageNameArray.indexOf(item);
+        collectionData["nft" + String(itemIndex)] =
+          metadataForm["IndividualMetadata"][item]["metadataURL"];
+      });
+      formData.append("metadata", JSON.stringify(collectionData));
+      const addcollectionURL = "http://localhost:8000/nft/addCollection";
+      const response = await fetch(addcollectionURL, {
+        method: "POST",
+        body: formData,
+      })
+        .then((resp) => {
+          return resp.json();
+        })
+        .then((data) => {
+          return data;
+        })
+        .catch((error) => {
+          return "Server error";
+        });
+      return response;
+    };
     const lazier = async () => {
       let formData = new FormData();
       formData.append(
@@ -141,6 +186,7 @@ const Article = () => {
       formData.append("owner", account);
       formData.append("contract", "0x");
       formData.append("network", chainId);
+      formData.append("contract_type", "simple");
       let collectionData = {};
       imageNameArray.map((item) => {
         let itemIndex = imageNameArray.indexOf(item);
@@ -181,7 +227,22 @@ const Article = () => {
               borderRadius: "25px",
             }}
           >
-            <button className="btn"> Lazy Minting</button>
+            <button
+              className="btn"
+              onClick={async () => {
+                let clickResponse = await lazy();
+                if (clickResponse === "Collection created successfully.") {
+                  let collectionPage =
+                    "/collection/" +
+                    account +
+                    defaultForm[0].replace(/\s+/g, "");
+                  router.push(collectionPage);
+                }
+              }}
+            >
+              {" "}
+              Lazy Minting
+            </button>
             <h4>Costs Gas</h4>
             <h4>More Secure.</h4>
             <h5>
@@ -317,7 +378,7 @@ const Article = () => {
       const fileSelector = document.createElement("input");
       fileSelector.setAttribute("type", "file");
       fileSelector.setAttribute("multiple", "");
-      fileSelector.setAttribute("key", new Date().getTime());
+
       fileSelector.click();
       fileSelector.onchange = async (e) => {
         for (let i = 0; i < e.target.files.length; i++) {
@@ -462,7 +523,7 @@ const Article = () => {
           {imgArray.map((file) => {
             let cardIndex = imgArray.indexOf(file);
             return (
-              <>
+              <React.Fragment key={getRandomKey(file)}>
                 <div
                   className="card"
                   id={cardIndex + "card"}
@@ -473,10 +534,14 @@ const Article = () => {
                   <MainFormBeforeTraits cardIndex={cardIndex} />
                   {defaultTraitForm.map((item) => {
                     if (item.length === 0) {
-                      return <></>;
+                      return (
+                        <React.Fragment
+                          key={getRandomKey("nullObject")}
+                        ></React.Fragment>
+                      );
                     } else {
                       return (
-                        <>
+                        <React.Fragment key={getRandomKey(item[0])}>
                           <div className="card-form">
                             <label htmlFor={item[0]}>{item[0]}</label>
                             <input
@@ -497,7 +562,7 @@ const Article = () => {
                             />
                             <h4>/{item[1]}</h4>
                           </div>
-                        </>
+                        </React.Fragment>
                       );
                     }
                   })}
@@ -552,7 +617,7 @@ const Article = () => {
                     Create Metadata
                   </button>
                 </div>
-              </>
+              </React.Fragment>
             );
           })}
           {imgArray.length < metadataForm["Total Supply"] && !imageUploader ? (
@@ -622,99 +687,101 @@ const Article = () => {
       <>
         <h2>Create New Collection.</h2>
         <h4 style={{ color: "red" }}>{formWarning}</h4>
-        {uploadForm.map((item) => {
-          return (
-            <>
-              <div className="myform">
-                <label htmlFor={item[0]}>{item[0]}</label>
-                <input
-                  id={item[0]}
-                  name={item[0]}
-                  type="text"
-                  placeholder={item[1]}
-                  value={metadataForm[item[1]]}
-                />
-              </div>
-            </>
-          );
-        })}
-        <div className="myform">
-          <label htmlFor="Minimum Price">Minimum Price</label>
-          <div style={{ width: "100%", display: "flex" }}>
-            <input
-              id="Minimum Price"
-              name="Minimum Price"
-              type="number"
-              placeholder="Set the minimum price to mint each nft."
-            />
-            <img
-              src="https://cryptologos.cc/logos/ethereum-eth-logo.svg?v=022"
-              alt="Eth"
-              style={{ width: "20px" }}
-            />
-          </div>
-        </div>
-        <div className="myform">
-          <label htmlFor="Launch Date">Launch Date</label>
-
-          <input id="Launch Date" name="Launch Date" type="date" />
-        </div>
-        <div className="myform">
-          <label htmlFor="Launch Time">Launch Time (UTC)</label>
-
-          <input
-            id="Launch Time"
-            name="Launch Time"
-            type="time"
-            placeholder="Set the launch date when your nft can be minted."
-          />
-        </div>
-        {traitState.map((item) => {
-          return (
-            <>
-              <div
-                className="myform"
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "1fr 5fr 3fr",
-                  alignItems: "center",
-                }}
-              >
-                <div className="traitform">{item[4]}</div>
-                <div className="traitform">
+        <div style={{ padding: "0vw 20vw 0vw 20vw" }}>
+          {uploadForm.map((item) => {
+            return (
+              <React.Fragment key={getRandomKey(item[0])}>
+                <div className="myform">
                   <label htmlFor={item[0]}>{item[0]}</label>
                   <input
-                    id={item[0] + item[4]}
+                    id={item[0]}
                     name={item[0]}
                     type="text"
                     placeholder={item[1]}
+                    value={metadataForm[item[1]]}
                   />
                 </div>
-                <div className="traitform">
-                  <label htmlFor={item[2]}>{item[2]}</label>
-                  <input
-                    id={item[2] + item[4]}
-                    name={item[2]}
-                    type="number"
-                    placeholder={item[3]}
-                  />
+              </React.Fragment>
+            );
+          })}
+          <div className="myform">
+            <label htmlFor="Minimum Price">Minimum Price</label>
+            <div style={{ width: "100%", display: "flex" }}>
+              <input
+                id="Minimum Price"
+                name="Minimum Price"
+                type="number"
+                placeholder="Set the minimum price to mint each nft."
+              />
+              <img
+                src="https://cryptologos.cc/logos/ethereum-eth-logo.svg?v=022"
+                alt="Eth"
+                style={{ width: "20px" }}
+              />
+            </div>
+          </div>
+          <div className="myform">
+            <label htmlFor="Launch Date">Launch Date</label>
+
+            <input id="Launch Date" name="Launch Date" type="date" />
+          </div>
+          <div className="myform">
+            <label htmlFor="Launch Time">Launch Time (UTC)</label>
+
+            <input
+              id="Launch Time"
+              name="Launch Time"
+              type="time"
+              placeholder="Set the launch date when your nft can be minted."
+            />
+          </div>
+          {traitState.map((item) => {
+            return (
+              <React.Fragment key={getRandomKey(item[0])}>
+                <div
+                  className="myform"
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "1fr 5fr 3fr",
+                    alignItems: "center",
+                  }}
+                >
+                  <div className="traitform">{item[4]}</div>
+                  <div className="traitform">
+                    <label htmlFor={item[0]}>{item[0]}</label>
+                    <input
+                      id={item[0] + item[4]}
+                      name={item[0]}
+                      type="text"
+                      placeholder={item[1]}
+                    />
+                  </div>
+                  <div className="traitform">
+                    <label htmlFor={item[2]}>{item[2]}</label>
+                    <input
+                      id={item[2] + item[4]}
+                      name={item[2]}
+                      type="number"
+                      placeholder={item[3]}
+                    />
+                  </div>
                 </div>
-              </div>
-            </>
-          );
-        })}
-        <div className="listChanger">
-          <button disabled={traitState.length === 1} onClick={removeTrait}>
-            -
-          </button>
-          <button disabled={traitState.length >= 10} onClick={addTrait}>
-            +
+              </React.Fragment>
+            );
+          })}
+          <div className="listChanger">
+            <button disabled={traitState.length === 1} onClick={removeTrait}>
+              -
+            </button>
+            <button disabled={traitState.length >= 10} onClick={addTrait}>
+              +
+            </button>
+          </div>
+
+          <button className="btn" onClick={page2Button}>
+            Next
           </button>
         </div>
-
-        <button className="btn" onClick={page2Button}>
-          Next
-        </button>
       </>
     );
   };
@@ -731,9 +798,11 @@ const Article = () => {
       setFormWarning("");
     };
     return (
-      <button className="btn" onClick={createButton}>
-        Create Collection
-      </button>
+      <div style={{ height: "40vh" }}>
+        <button className="btn" onClick={createButton}>
+          Create Collection
+        </button>
+      </div>
     );
   };
 
@@ -754,7 +823,6 @@ const Article = () => {
       <div
         style={{
           boxShadow: "0 0 20px rgba(0, 0, 0, 0.15)",
-
           margin: "auto",
         }}
       >
@@ -763,8 +831,8 @@ const Article = () => {
             <h1>NFT Collection</h1>
             <h2>Metadata will be stored on ipfs</h2>
             <h4 style={{ color: "blue" }}>{connectionWarning}</h4>
-            <UploadSection />
           </div>
+          <UploadSection />
         </section>
       </div>
       <Footer />

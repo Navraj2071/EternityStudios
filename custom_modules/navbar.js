@@ -59,8 +59,7 @@ const navbar = () => {
         <Link href="/">ETERNITY STUDIOS</Link>
       </div>
       <div className="navbar-mid" style={{ color: "red" }}>
-        <p>Beta Version. </p>
-        <p>TestNet Rinkeby only.</p>
+        <p></p>
       </div>
 
       <div className="navbar-mid">

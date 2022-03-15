@@ -1,5 +1,6 @@
 import Navbar from "../../custom_modules/navbar";
 import Footer from "../../custom_modules/footer";
+import React from "react";
 
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
@@ -18573,27 +18574,34 @@ const CollectionPage = ({ collectionData }) => {
     setMetadataArray([...metadataArray]);
   };
 
+  const getRandomKey = (starterString) => {
+    let randomKey =
+      Math.floor(Math.random() * 10000, 4).toString() +
+      starterString.toString();
+    return randomKey;
+  };
+
   const NFTdata = () => {
     return (
-      <>
+      <React.Fragment>
         <div className="cardholder" key={"cardholder" + Math.random()}>
           {metadataArray.map((nft) => {
             return (
-              <>
+              <React.Fragment key={getRandomKey(nft["name"])}>
                 <div
                   className="card"
                   key={nft["name"] + nft["owner"]}
                   onClick={() => {
                     let metaURL = JSON.parse(
                       collectionData["collectionMetadata"]
-                    )["nft" + metadataArray.indexOf(nft)].split(
-                      "https://ipfs.io/ipfs/"
-                    )[1];
-
-                    let metaURL2 =
-                      metaURL.split("?")[0] + "_" + metaURL.split("?")[1];
-
-                    router.push("/assets/meta/" + metaURL2);
+                    )["nft" + metadataArray.indexOf(nft)].split("https://")[1];
+                    let metaURL1 = metaURL.replaceAll("/", "slasheternity");
+                    let metaURL2 = metaURL1.replaceAll(
+                      "?",
+                      "questionmarketernity"
+                    );
+                    let metaURL3 = metaURL2.replaceAll(".", "doteternity");
+                    router.push("/assets/meta/" + metaURL3);
                   }}
                 >
                   <img src={nft["image"]} alt="" />
@@ -18617,11 +18625,11 @@ const CollectionPage = ({ collectionData }) => {
                     <h5>{nft["is_minted"] && mint ? "Sold out" : ""}</h5>
                   </div>
                 </div>
-              </>
+              </React.Fragment>
             );
           })}
         </div>
-      </>
+      </React.Fragment>
     );
   };
 
@@ -18681,7 +18689,7 @@ const CollectionPage = ({ collectionData }) => {
         }
       });
     }, 1000);
-  }, [account]);
+  }, [account, chainId]);
 
   const saveCollectionContract = async (contract) => {
     await fetch(
@@ -18909,7 +18917,6 @@ const CollectionPage = ({ collectionData }) => {
                     <img
                       src="https://cryptologos.cc/logos/ethereum-eth-logo.svg?v=022"
                       alt="Eth"
-                      alt=""
                       style={{ width: "1.75em", border: "none" }}
                     />
                   </div>

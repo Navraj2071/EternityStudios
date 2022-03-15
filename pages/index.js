@@ -5,21 +5,24 @@ import Navbar from "../custom_modules/navbar";
 import Footer from "../custom_modules/footer";
 import Link from "next/link";
 import { useEthers } from "@usedapp/core";
+import { Router, useRouter } from "next/dist/client/router";
 
 const NftArticle = () => {
-  const { account, activateBrowserWallet, deactivate } = useEthers();
   const title = "NFTs";
   const textArray = ["Create", "Deploy", "Explore"];
   const [text, setText] = useState(textArray[0]);
-  const srcArray = [
-    "https://lh3.googleusercontent.com/HnOFidKUA9OcvZj1GUtFxexnpYDX0g9s6alBXCJHxidPt3HS67NYMY5hCIaGbw7BGLzoHk5GAr-zWKR0EZMSgT09vdMoYmHusX0b=w600",
-    "https://lh3.googleusercontent.com/NTVJXGApcSVsfYZFHcCZFERcO94zLZqMf05iDyhP7b5FClwvMWMBxkQ28pHy0O_iEUFJqO2BTXM-UqNZVyz9Vlo_v09Wmc3UjRrMvg=w600",
-    "https://lh3.googleusercontent.com/RRrDcbDgvg9kXiPWirdL5x72_LJnjX5KaLIkCQBo7kmWHglsaBJuVdsgjPcNvjh0zoklOjD-t-xiFM9VTlyz57atb3rqfFF7vmZZrWE=w600",
-    "https://lh3.googleusercontent.com/eIhk029TEWgBb5vhVUJIa1h1iLj11VJSlUCoEDz5zC7drNmGjcxPAU6GbXCxwoLdExqhVOwaMdWLgAHHLmOkdrrs3mDNXxjP5kes4w=w600",
+  const defaultImage = [
+    {
+      image:
+        "https://lh3.googleusercontent.com/HnOFidKUA9OcvZj1GUtFxexnpYDX0g9s6alBXCJHxidPt3HS67NYMY5hCIaGbw7BGLzoHk5GAr-zWKR0EZMSgT09vdMoYmHusX0b=w600",
+      metadata: "",
+    },
   ];
+  const [srcArray, setsrcArray] = useState([...defaultImage]);
   const [src, setSrc] = useState(srcArray[0]);
+  const router = useRouter();
 
-  useEffect(() => {
+  useEffect(async () => {
     const textToBeSet = () => {
       if (textArray.indexOf(text) == textArray.length - 1) {
         return textArray[0];
@@ -35,8 +38,24 @@ const NftArticle = () => {
       }
     };
     setTimeout(() => setText(textToBeSet), 800);
-    setTimeout(() => setSrc(srcToBeSet), 10000);
+    setTimeout(() => setSrc(srcToBeSet), 5000);
+    if (JSON.stringify(srcArray) === JSON.stringify(defaultImage)) {
+      await poppulateRandomImages();
+    }
   }, [text]);
+
+  const poppulateRandomImages = async () => {
+    let randomImageArray = await getRandomImages(5);
+    setsrcArray([...randomImageArray]);
+  };
+
+  const goToAssetMeta = (metaURLBase) => {
+    let metaURL = metaURLBase.split("https://")[1];
+    let metaURL1 = metaURL.replaceAll("/", "slasheternity");
+    let metaURL2 = metaURL1.replaceAll("?", "questionmarketernity");
+    let metaURL3 = metaURL2.replaceAll(".", "doteternity");
+    router.push("/assets/meta/" + metaURL3);
+  };
   return (
     <section className="section">
       <div className="writing">
@@ -49,7 +68,13 @@ const NftArticle = () => {
       </div>
 
       <div className="illustration">
-        <img src={src} alt="NFT" />
+        <img
+          src={src["image"]}
+          alt="NFT"
+          onClick={() => {
+            goToAssetMeta(src["metadata"][0]);
+          }}
+        />
       </div>
     </section>
   );
@@ -84,7 +109,7 @@ const Article = () => {
       <div
         style={{
           boxShadow: "0 0 20px rgba(0, 0, 0, 0.15)",
-          width: "80vw",
+          width: "100vw",
           margin: "auto",
         }}
       >
@@ -97,3 +122,76 @@ const Article = () => {
 };
 
 export default Article;
+
+const getRandomNFTs = async (arrayNumber) => {
+  let randomNFTs = await fetch(
+    "http://localhost:8000/nft/getRandomNFT?number=" + arrayNumber
+  )
+    .then((resp) => {
+      return resp.json();
+    })
+    .then((data) => {
+      return data;
+    })
+    .catch((error) => {
+      return "Server error";
+    });
+  return randomNFTs;
+};
+
+const getRandomImages = async (arrayNumber) => {
+  let imageArray = [];
+  let randomNFTs = await getRandomNFTs(arrayNumber);
+  if (randomNFTs !== "Server error") {
+    if (randomNFTs["response"] === "Success") {
+      for (let i = 0; i < arrayNumber; i++) {
+        let randomImage = await fetch(randomNFTs["nft" + i]["metadataURL"])
+          .then((resp) => {
+            return resp.json();
+          })
+          .then((data) => {
+            return data;
+          })
+          .catch((error) => {
+            return "Server error";
+          });
+        if (randomImage !== "Server error") {
+          imageArray.push({
+            image: randomImage["image"],
+            metadata: [randomNFTs["nft" + i]["metadataURL"]],
+          });
+        }
+      }
+      if (imageArray.length > 0) {
+        return imageArray;
+      }
+    }
+  }
+  return [
+    {
+      image:
+        "https://lh3.googleusercontent.com/HnOFidKUA9OcvZj1GUtFxexnpYDX0g9s6alBXCJHxidPt3HS67NYMY5hCIaGbw7BGLzoHk5GAr-zWKR0EZMSgT09vdMoYmHusX0b=w600",
+      metadata: "",
+    },
+    {
+      image:
+        "https://lh3.googleusercontent.com/NTVJXGApcSVsfYZFHcCZFERcO94zLZqMf05iDyhP7b5FClwvMWMBxkQ28pHy0O_iEUFJqO2BTXM-UqNZVyz9Vlo_v09Wmc3UjRrMvg=w600",
+      metadata: "",
+    },
+    {
+      image:
+        "https://lh3.googleusercontent.com/RRrDcbDgvg9kXiPWirdL5x72_LJnjX5KaLIkCQBo7kmWHglsaBJuVdsgjPcNvjh0zoklOjD-t-xiFM9VTlyz57atb3rqfFF7vmZZrWE=w600",
+      metadata: "",
+    },
+    {
+      image:
+        "https://lh3.googleusercontent.com/eIhk029TEWgBb5vhVUJIa1h1iLj11VJSlUCoEDz5zC7drNmGjcxPAU6GbXCxwoLdExqhVOwaMdWLgAHHLmOkdrrs3mDNXxjP5kes4w=w600",
+      metadata: "",
+    },
+  ];
+};
+
+// export async function getServerSideProps() {
+//   let randomImages = await getRandomImages(5);
+//   return { props: { imageArray: randomImages } };
+// }

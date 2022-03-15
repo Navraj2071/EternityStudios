@@ -130,6 +130,7 @@ a {
 
 .section {
   padding: 0px 0px 20px 0px;
+  height: 90vh;
   text-align: center;
   color: var(--clr3);
   display: grid;
@@ -141,12 +142,15 @@ a {
   margin: auto;
 }
 .section .illustration {
+  padding: 20px;
+  border: 1px solid var(--clr-heading1);
+  border-radius: 25px;
   margin: auto;
 }
 .section .illustration img {
   padding: 0px 10px;
-  max-width: 30vw;
-  max-height: 30vw;
+  width: 30vw;
+  height: 30vw;
   border-radius: 25px;
 }
 .section-vertical {
@@ -183,6 +187,7 @@ a {
 }
 
 .myform {
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -266,6 +271,7 @@ a {
 
 .statusBar {
   margin: 25px;
+  height: 5vh;
   display: grid;
   grid-template-columns: 1fr 8fr 1fr;
 }

@@ -4,11 +4,11 @@ import Footer from "../../custom_modules/footer";
 import Link from "next/link";
 import { useState } from "react";
 import { useEffect } from "react";
-import { Slideshow } from "../../custom_modules/slideshow";
+import { useRouter } from "next/router";
 
 const DeployArticle = () => {
   const title = "Deploy NFTs";
-  const text = "Deploy your NFT directly on chain. We don't use lazy-minting.";
+  const text = "Easy Peasy Lemon Squeezy.";
 
   const src =
     "https://lh3.googleusercontent.com/HnOFidKUA9OcvZj1GUtFxexnpYDX0g9s6alBXCJHxidPt3HS67NYMY5hCIaGbw7BGLzoHk5GAr-zWKR0EZMSgT09vdMoYmHusX0b=w600";
@@ -36,66 +36,103 @@ const DeployArticle = () => {
 };
 
 const ExploreArticle = () => {
-  const [windowWidth, setWindowWidth] = useState(1080);
-  const [noOfElements, setNoOfElements] = useState(3);
-  const [imgWidth, setImgWidth] = useState(200);
-  const [isBrowser, setIsBrowser] = useState(false);
-  const checkSize = () => {
-    setWindowWidth(window.innerWidth);
+  const router = useRouter();
+
+  const title = "Explore NFTs";
+  const text = "Look at all these NFTs deployed by creative people like you. ";
+  const sampleNFT = {
+    image:
+      'https://lh3.googleusercontent.com/HnOFidKUA9OcvZj1GUtFxexnpYDX0g9s6alBXCJHxidPt3HS67NYMY5hCIaGbw7BGLzoHk5GAr-zWKR0EZMSgT09vdMoYmHusX0b=w600"',
+    metadata: "",
+  };
+  const [NFTarray, setNFTarray] = useState([sampleNFT]);
+
+  const getRandomNFTs = async () => {
+    let NFTarray = [];
+    let randomNFT = await fetch(
+      "http://localhost:8000/nft/getRandomNFT?number=10"
+    )
+      .then((resp) => {
+        return resp.json();
+      })
+      .then((data) => {
+        return data;
+      })
+      .catch((error) => {
+        return "Server error";
+      });
+    if (randomNFT !== "Server error") {
+      for (let i = 0; i < 10; i++) {
+        let randomImage = await fetch(randomNFT["nft" + i]["metadataURL"])
+          .then((resp) => {
+            return resp.json();
+          })
+          .then((data) => {
+            return data;
+          })
+          .catch((error) => {
+            return "Server error";
+          });
+        if (randomImage !== "Server error") {
+          NFTarray.push({
+            image: randomImage["image"],
+            metadata: randomNFT["nft" + i]["metadataURL"],
+          });
+        } else {
+          NFTarray.push(sampleNFT);
+        }
+      }
+      setNFTarray([...NFTarray]);
+    }
+  };
+  const getRandomKey = (starterString) => {
+    let randomKey = Math.floor(Math.random() * 1000, 3) + starterString;
+    return randomKey;
+  };
+
+  const goToAssetMeta = (metaURLBase) => {
+    let metaURL = metaURLBase.split("https://")[1];
+    let metaURL1 = metaURL.replaceAll("/", "slasheternity");
+    let metaURL2 = metaURL1.replaceAll("?", "questionmarketernity");
+    let metaURL3 = metaURL2.replaceAll(".", "doteternity");
+    router.push("/assets/meta/" + metaURL3);
   };
 
   useEffect(() => {
-    console.log(typeof window);
-    console.log(document.readyState);
-    console.log(windowWidth);
-    if (typeof window !== "undefined") {
-      setIsBrowser(true);
-      checkSize;
-      setNoOfElements(
-        Math.max(Math.round((windowWidth * 0.8 - 20) / 200) - 2, 1)
-      );
-      setImgWidth((windowWidth * 0.8 - 20) / (noOfElements + 2));
-      setWindowWidth(window.innerWidth);
-    } else {
-      setWindowWidth(1080);
-    }
-    window.addEventListener("resize", checkSize);
-    return () => {
-      window.removeEventListener("resize", checkSize);
-    };
-  }, [windowWidth]);
-
-  const imgArray = [
-    "https://lh3.googleusercontent.com/HnOFidKUA9OcvZj1GUtFxexnpYDX0g9s6alBXCJHxidPt3HS67NYMY5hCIaGbw7BGLzoHk5GAr-zWKR0EZMSgT09vdMoYmHusX0b=w600",
-    "https://lh3.googleusercontent.com/NTVJXGApcSVsfYZFHcCZFERcO94zLZqMf05iDyhP7b5FClwvMWMBxkQ28pHy0O_iEUFJqO2BTXM-UqNZVyz9Vlo_v09Wmc3UjRrMvg=w600",
-    "https://lh3.googleusercontent.com/RRrDcbDgvg9kXiPWirdL5x72_LJnjX5KaLIkCQBo7kmWHglsaBJuVdsgjPcNvjh0zoklOjD-t-xiFM9VTlyz57atb3rqfFF7vmZZrWE=w600",
-    "https://lh3.googleusercontent.com/eIhk029TEWgBb5vhVUJIa1h1iLj11VJSlUCoEDz5zC7drNmGjcxPAU6GbXCxwoLdExqhVOwaMdWLgAHHLmOkdrrs3mDNXxjP5kes4w=w600",
-    "https://lh3.googleusercontent.com/HnOFidKUA9OcvZj1GUtFxexnpYDX0g9s6alBXCJHxidPt3HS67NYMY5hCIaGbw7BGLzoHk5GAr-zWKR0EZMSgT09vdMoYmHusX0b=w600",
-    "https://lh3.googleusercontent.com/HnOFidKUA9OcvZj1GUtFxexnpYDX0g9s6alBXCJHxidPt3HS67NYMY5hCIaGbw7BGLzoHk5GAr-zWKR0EZMSgT09vdMoYmHusX0b=w600",
-    "https://lh3.googleusercontent.com/RRrDcbDgvg9kXiPWirdL5x72_LJnjX5KaLIkCQBo7kmWHglsaBJuVdsgjPcNvjh0zoklOjD-t-xiFM9VTlyz57atb3rqfFF7vmZZrWE=w600",
-    "https://lh3.googleusercontent.com/eIhk029TEWgBb5vhVUJIa1h1iLj11VJSlUCoEDz5zC7drNmGjcxPAU6GbXCxwoLdExqhVOwaMdWLgAHHLmOkdrrs3mDNXxjP5kes4w=w600",
-    "https://lh3.googleusercontent.com/eIhk029TEWgBb5vhVUJIa1h1iLj11VJSlUCoEDz5zC7drNmGjcxPAU6GbXCxwoLdExqhVOwaMdWLgAHHLmOkdrrs3mDNXxjP5kes4w=w600",
-    "https://lh3.googleusercontent.com/HnOFidKUA9OcvZj1GUtFxexnpYDX0g9s6alBXCJHxidPt3HS67NYMY5hCIaGbw7BGLzoHk5GAr-zWKR0EZMSgT09vdMoYmHusX0b=w600",
-    "https://lh3.googleusercontent.com/HnOFidKUA9OcvZj1GUtFxexnpYDX0g9s6alBXCJHxidPt3HS67NYMY5hCIaGbw7BGLzoHk5GAr-zWKR0EZMSgT09vdMoYmHusX0b=w600",
-    "https://lh3.googleusercontent.com/RRrDcbDgvg9kXiPWirdL5x72_LJnjX5KaLIkCQBo7kmWHglsaBJuVdsgjPcNvjh0zoklOjD-t-xiFM9VTlyz57atb3rqfFF7vmZZrWE=w600",
-    "https://lh3.googleusercontent.com/eIhk029TEWgBb5vhVUJIa1h1iLj11VJSlUCoEDz5zC7drNmGjcxPAU6GbXCxwoLdExqhVOwaMdWLgAHHLmOkdrrs3mDNXxjP5kes4w=w600",
-  ];
-  const Slide = Slideshow(imgArray, noOfElements, 5, 10, imgWidth);
-  const title = "Explore NFTs";
-  const text = "Look at all these NFTs deployed by creative people like you. ";
-  const src =
-    "https://lh3.googleusercontent.com/HnOFidKUA9OcvZj1GUtFxexnpYDX0g9s6alBXCJHxidPt3HS67NYMY5hCIaGbw7BGLzoHk5GAr-zWKR0EZMSgT09vdMoYmHusX0b=w600";
-
+    getRandomNFTs();
+  }, []);
   return (
     <section className="section-vertical">
       <div className="writing">
         <h1>{title}</h1>
         <h2>{text}</h2>
       </div>
+      <div className="cardholder">
+        {NFTarray.map((nft) => {
+          return (
+            <React.Fragment key={getRandomKey(nft["image"])}>
+              <div
+                className="card"
+                onClick={() => {
+                  goToAssetMeta(nft["metadata"]);
+                }}
+              >
+                <img src={nft["image"]} alt="" />
+              </div>
+            </React.Fragment>
+          );
+        })}
+      </div>
 
-      <div className="illustration">{isBrowser ? Slide : ""}</div>
       <div className="writing">
-        <button className="btn">Explore more</button>
+        <button
+          className="btn"
+          onClick={() => {
+            router.push("/nft/explore");
+          }}
+        >
+          Explore more
+        </button>
       </div>
     </section>
   );
@@ -110,6 +147,7 @@ const CreateArticle = () => {
   const src =
     "https://lh3.googleusercontent.com/HnOFidKUA9OcvZj1GUtFxexnpYDX0g9s6alBXCJHxidPt3HS67NYMY5hCIaGbw7BGLzoHk5GAr-zWKR0EZMSgT09vdMoYmHusX0b=w600";
 
+  const router = useRouter();
   return (
     <section className="section">
       <div className="illustration">
@@ -119,7 +157,7 @@ const CreateArticle = () => {
         <h1>{title}</h1>
         <h2>{text}</h2>
 
-        <button className="btn" onClick={(e) => (window.location = "/nft")}>
+        <button className="btn" onClick={() => router.push("/nft/create")}>
           Get Started
         </button>
       </div>
@@ -134,7 +172,7 @@ const Article = () => {
       <div
         style={{
           boxShadow: "0 0 20px rgba(0, 0, 0, 0.15)",
-          width: "80vw",
+          width: "100vw",
           margin: "auto",
         }}
       >
