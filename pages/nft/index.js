@@ -17,11 +17,11 @@ const DeployArticle = () => {
         <h1>{title}</h1>
         <h2>{text}</h2>
         <h3>You can deploy a single NFT</h3>
-        <Link href="/nft/ds">
+        <Link href="/nft/ds" passHref>
           <button className="btn">Deploy Single</button>
         </Link>
         <h3>or a collection of NFTs.</h3>
-        <Link href="/nft/dc">
+        <Link href="/nft/dc" passHref>
           <button className="btn">Deploy Collection</button>
         </Link>
       </div>
@@ -47,9 +47,7 @@ const ExploreArticle = () => {
 
   const getRandomNFTs = async () => {
     let NFTarray = [];
-    let randomNFT = await fetch(
-      BASE_URL + "nft/getRandomNFT?number=10"
-    )
+    let randomNFT = await fetch(BASE_URL + "nft/getRandomNFT?number=10")
       .then((resp) => {
         return resp.json();
       })

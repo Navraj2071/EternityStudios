@@ -222,8 +222,8 @@ const Article = () => {
           }}
         >
           <div>
-            <h4>You're all set!</h4>
-            <h4>You won't be able to change anything after deploying.</h4>
+            <h4>You&apos;re all set!</h4>
+            <h4>You won&apos;t be able to change anything after deploying.</h4>
             <h5>
               You might not be able to view your collection for 15-20 minutes
               after creation. The IPFS servers take some time.

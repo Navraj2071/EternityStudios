@@ -36,13 +36,6 @@ const getProfileData = async (
 };
 
 const ProfilePage = ({ profileData }) => {
-  if (profileData === "Server error") {
-    return (
-      <>
-        <h1>Server error...</h1>
-      </>
-    );
-  }
   const { account, activateBrowserWallet, deactivate } = useEthers();
   const router = useRouter();
   const queryaccount = profileData["account"];
@@ -59,22 +52,24 @@ const ProfilePage = ({ profileData }) => {
   const [profilePicDataLocal, setProfilePicDataLocal] = useState("");
   const [saveButtonEnabled, setSaveButtonEnabled] = useState(true);
 
-  useEffect(async () => {
-    if (account !== undefined) {
-      setIsowner(true);
-    } else setIsowner(false);
-    if (profileSingleNFTs.length === 0) {
-      getProfileSingles();
-    }
-    if (profileCollections.length === 0) {
-      getProfileCollections();
-    }
-    if (
-      saveProfileWarning === "Uploading profile picture..." &&
-      profilePicDataLocal !== ""
-    ) {
-      setSaveProfileWarning("");
-      setSaveButtonEnabled(true);
+  useEffect(() => {
+    if (profileData !== "Server error") {
+      if (account !== undefined) {
+        setIsowner(true);
+      } else setIsowner(false);
+      if (profileSingleNFTs.length === 0) {
+        getProfileSingles();
+      }
+      if (profileCollections.length === 0) {
+        getProfileCollections();
+      }
+      if (
+        saveProfileWarning === "Uploading profile picture..." &&
+        profilePicDataLocal !== ""
+      ) {
+        setSaveProfileWarning("");
+        setSaveButtonEnabled(true);
+      }
     }
   }, [account, profilePicDataLocal]);
 
@@ -186,10 +181,9 @@ const ProfilePage = ({ profileData }) => {
       if (collections["response"] === "Success") {
         let profileCollections = [];
         for (let i = 0; i < parseInt(collections["number"]); i++) {
-          // console.log(collections["collection" + i]["nft_data"]);
           let firstNFTmetadataURL =
             collections["collection" + i]["nft_data"]["data0"];
-          console.log(firstNFTmetadataURL);
+
           let NFTdata = await getNFTData(firstNFTmetadataURL);
           if (NFTdata !== "Server error") {
             collections["collection" + i]["image"] = NFTdata["image"];
@@ -231,6 +225,14 @@ const ProfilePage = ({ profileData }) => {
     let metaURL3 = metaURL2.replaceAll(".", "doteternity");
     router.push("/assets/meta/" + metaURL3);
   };
+
+  if (profileData === "Server error") {
+    return (
+      <>
+        <h1>Server error...</h1>
+      </>
+    );
+  }
 
   return (
     <>
@@ -422,10 +424,10 @@ export async function getServerSideProps(context) {
   if (profiledata === "Server error") {
     return { props: { profileData: profiledata } };
   }
-
   return {
     props: {
       profileData: {
+        response: profiledata["response"],
         name: profiledata["name"],
         description: profiledata["description"],
         profilepic: profiledata["profilepic"],

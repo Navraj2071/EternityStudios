@@ -6,17 +6,7 @@ import parse from "html-react-parser";
 import { useState, useEffect } from "react";
 import BASE_URL from "../../apiConfig";
 
-
 const BlogPage = ({ blogData }) => {
-  if (blogData["response"] !== "Success") {
-    return (
-      <>
-        <h2>{blogData["response"]}</h2>
-        <h2>{blogData["blogId"]}</h2>
-      </>
-    );
-  }
-
   const router = useRouter();
   const [searchMessage, setSearchMessage] = useState("");
   const searchBlog = async () => {
@@ -50,6 +40,14 @@ const BlogPage = ({ blogData }) => {
   const createButton = async () => {
     router.push("/blog");
   };
+
+  if (blogData["response"] !== "Success") {
+    return (
+      <>
+        <h2>{blogData["response"]}</h2>
+      </>
+    );
+  }
   return (
     <>
       <Navbar />

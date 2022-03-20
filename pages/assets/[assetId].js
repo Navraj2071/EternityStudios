@@ -6,29 +6,16 @@ import { useState, useEffect } from "react";
 import BASE_URL from "../../apiConfig";
 
 const AssetPage = ({ assetData }) => {
-  if (assetData["response"] === "Server error") {
-    return (
-      <>
-        <h2>Server Error...</h2>
-      </>
-    );
-  }
-  if (assetData["response"] === "NFT doesn't exist") {
-    return (
-      <>
-        <h2>Requested asset not found.</h2>
-      </>
-    );
-  }
-
   const [imageURL, setImageURL] = useState("");
   const [assetName, setAssetName] = useState("");
   const [assetDescription, setAssetDescription] = useState("");
   const [traits, setTraits] = useState([]);
   const router = useRouter();
 
-  useEffect(async () => {
-    await getNftIPFSData();
+  useEffect(() => {
+    if (assetData["response"] === "Success") {
+      getNftIPFSData();
+    }
   }, []);
   const getNftIPFSData = async () => {
     let ipfsURL = assetData["assetMetadataURL"];
@@ -46,6 +33,21 @@ const AssetPage = ({ assetData }) => {
       Math.floor(Math.random() * 1000, 3).toString() + starterString;
     return randomKey;
   };
+
+  if (assetData["response"] === "Server error") {
+    return (
+      <>
+        <h2>Server Error...</h2>
+      </>
+    );
+  }
+  if (assetData["response"] === "NFT doesn't exist") {
+    return (
+      <>
+        <h2>Requested asset not found.</h2>
+      </>
+    );
+  }
 
   const NFTCard = () => {
     return (
@@ -119,8 +121,7 @@ export default AssetPage;
 
 const getAssetData = async (assetId) => {
   let response = await fetch(
-    BASE_URL + "nft/getNFT?request_type=withContract&asset_id=" +
-      assetId
+    BASE_URL + "nft/getNFT?request_type=withContract&asset_id=" + assetId
   )
     .then((resp) => {
       return resp.json();

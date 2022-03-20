@@ -32,29 +32,6 @@ const CollectionPage = ({ collectionData }) => {
   const router = useRouter();
   const { account, chainId, activateBrowserWallet, deactivate } = useEthers();
 
-  if (collectionData["response"] === "Server error") {
-    return (
-      <>
-        <Navbar />
-        <h2 style={{minHeight: '80vh'}}>Something went wrong with the server. Please try again.</h2>
-        <Footer />
-      </>
-    );
-  }
-
-  if (collectionData["response"] === "Collection doesn't exist") {
-    return (
-      <>
-        <Navbar />
-        <h2 style={{minHeight: '80vh'}}>The requested collection doesn't exist.</h2>
-        <button className="btn" onClick={() => router.push("/nft/dc")}>
-          Create Collection
-        </button>
-        <Footer />
-      </>
-    );
-  }
-
   const [img4, setImg4] = useState("");
   const [remainingTime, setremainingTime] = useState("");
   const [mint, setMint] = useState(false);
@@ -100,7 +77,6 @@ const CollectionPage = ({ collectionData }) => {
   };
 
   const poppulatemetadata = async () => {
-    console.log("Poppulating...");
     metadataArray = [];
     for (let i = 0; i < collectionData["collectionSupply"]; i++) {
       let metadataURL = JSON.parse(collectionData["collectionMetadata"])[
@@ -108,7 +84,8 @@ const CollectionPage = ({ collectionData }) => {
       ];
       let metadata = await getNFTdata(metadataURL);
       let extraPropsURL =
-        BASE_URL + "nft/getNFT?request_type=withMetadata&metadataURL=" +
+        BASE_URL +
+        "nft/getNFT?request_type=withMetadata&metadataURL=" +
         metadataURL;
       let extraProps = await getNFTdata(extraPropsURL);
       metadata["on_sale"] = extraProps["on_sale"];
@@ -118,12 +95,11 @@ const CollectionPage = ({ collectionData }) => {
       metadata["metadataURL"] = metadataURL;
       metadataArray.push(metadata);
     }
-    console.log(metadataArray);
+
     let numberOfavailableNFTS = 0;
     metadataArray.map((item) => {
       if (item["on_sale"] === true) {
         numberOfavailableNFTS++;
-        console.log(numberOfavailableNFTS);
       }
     });
     if (numberOfavailableNFTS > 0) {
@@ -195,13 +171,15 @@ const CollectionPage = ({ collectionData }) => {
     );
   };
 
-  useEffect(async () => {
+  useEffect(() => {
     if (account !== undefined) {
       setConnectionWarning("");
-    }    
+    }
+    if (collectionData["response"] === "Success") {
       setImages();
       poppulatemetadata();
-    
+    }
+
     let timerInterval = setInterval(() => {
       setremainingTime(() => {
         let today = new Date(new Date().toUTCString().slice(0, -3));
@@ -273,7 +251,7 @@ const CollectionPage = ({ collectionData }) => {
       .catch((error) => {
         return "Server error";
       });
-    console.log(response);
+
     if (response === "Server error") {
       return response;
     }
@@ -365,8 +343,6 @@ const CollectionPage = ({ collectionData }) => {
       let tokenId = respObject["token_id"];
       router.push("/assets/" + contract + "_" + tokenId);
     }
-
-    console.log(response);
   };
 
   const sendFloorPrice = async () => {
@@ -374,7 +350,7 @@ const CollectionPage = ({ collectionData }) => {
     let tokenURItoMint = getTokenToMint();
     const web3 = new Web3(Web3.givenProvider);
     let gas = await getGas(tokenURItoMint);
-    console.log(gas);
+
     if (gas === "Server error") {
       setLoadingStatus("something went wrong. Can't calculate gas.");
       setMintButtonDisabled(false);
@@ -445,9 +421,36 @@ const CollectionPage = ({ collectionData }) => {
     }
   };
 
+  if (collectionData["response"] === "Server error") {
+    return (
+      <>
+        <Navbar />
+        <h2 style={{ minHeight: "80vh" }}>
+          Something went wrong with the server. Please try again.
+        </h2>
+        <Footer />
+      </>
+    );
+  }
+
+  if (collectionData["response"] === "Collection doesn't exist") {
+    return (
+      <>
+        <Navbar />
+        <div style={{ minHeight: "80vh" }}>
+          <h2>The requested collection doesn&apos;t exist.</h2>
+          <button className="btn" onClick={() => router.push("/nft/dc")}>
+            Create Collection
+          </button>
+        </div>
+        <Footer />
+      </>
+    );
+  }
+
   return (
     <>
-      <Navbar />      
+      <Navbar />
       <div className="nft">
         <h1>{collectionData["collectionName"]}</h1>
         <h2>{collectionData["collectionDescription"]}</h2>

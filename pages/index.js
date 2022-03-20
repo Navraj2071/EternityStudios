@@ -23,7 +23,7 @@ const NftArticle = () => {
   const [src, setSrc] = useState(srcArray[0]);
   const router = useRouter();
 
-  useEffect(async () => {
+  useEffect(() => {
     const textToBeSet = () => {
       if (textArray.indexOf(text) == textArray.length - 1) {
         return textArray[0];
@@ -41,7 +41,7 @@ const NftArticle = () => {
     setTimeout(() => setText(textToBeSet), 800);
     setTimeout(() => setSrc(srcToBeSet), 5000);
     if (JSON.stringify(srcArray) === JSON.stringify(defaultImage)) {
-      await poppulateRandomImages();
+      poppulateRandomImages();
     }
   }, [text]);
 
@@ -63,7 +63,7 @@ const NftArticle = () => {
         <h1>{title}</h1>
         <h2>{text}</h2>
         <h3>Smartest way to enter the world of NFTs</h3>
-        <Link href="/nft">
+        <Link href="/nft" passHref>
           <button className="btn">Get Started</button>
         </Link>
       </div>
@@ -94,8 +94,8 @@ const LotteryArticle = () => {
       <div className="writing">
         <h1>{title}</h1>
         <h2>{text}</h2>
-        <h3>World's first truly Automated lottery.</h3>
-        <Link href="/lottery">
+        <h3>World&apos;s first truly Automated lottery.</h3>
+        <Link href="/lottery" passHref>
           <button className="btn">Play</button>
         </Link>
       </div>
