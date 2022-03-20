@@ -3,6 +3,7 @@ import { useEthers } from "@usedapp/core";
 import { useContext } from "react";
 import Link from "next/link";
 import AppContext from "../AppContext";
+import Eternity from "next/image";
 
 const navbar = () => {
   const { account, chainId, activateBrowserWallet, deactivate } = useEthers();
@@ -56,7 +57,13 @@ const navbar = () => {
   return (
     <div className="navbar-main">
       <div className="navbar-left">
-        <Link href="/">ETERNITY STUDIOS</Link>
+        <Link href="/">
+          <img
+            src="/Eternity.png"
+            alt="Eternity Studios"
+            style={{ height: "100%" }}
+          />
+        </Link>
       </div>
       <div className="navbar-mid" style={{ color: "red" }}>
         <p></p>

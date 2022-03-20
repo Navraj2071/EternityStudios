@@ -4,6 +4,7 @@ import Footer from "../../../custom_modules/footer";
 import { useState, useEffect } from "react";
 import { useEthers } from "@usedapp/core";
 import { useRouter } from "next/router";
+import BASE_URL from "../../../apiConfig";
 
 const Article = () => {
   const router = useRouter();
@@ -155,7 +156,7 @@ const Article = () => {
           metadataForm["IndividualMetadata"][item]["metadataURL"];
       });
       formData.append("metadata", JSON.stringify(collectionData));
-      const addcollectionURL = "http://localhost:8000/nft/addCollection";
+      const addcollectionURL = BASE_URL + "nft/addCollection";
       const response = await fetch(addcollectionURL, {
         method: "POST",
         body: formData,
@@ -194,7 +195,7 @@ const Article = () => {
           metadataForm["IndividualMetadata"][item]["metadataURL"];
       });
       formData.append("metadata", JSON.stringify(collectionData));
-      const addcollectionURL = "http://localhost:8000/nft/addCollection";
+      const addcollectionURL = BASE_URL + "nft/addCollection";
       const response = await fetch(addcollectionURL, {
         method: "POST",
         body: formData,
@@ -215,51 +216,18 @@ const Article = () => {
       <>
         <div
           style={{
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr",
-            gap: "25px",
+            display: "flex",
+            justifyContent: "center",
+            minHeight: "35vh",
           }}
         >
-          <div
-            style={{
-              padding: "2.5rem",
-              border: "1px solid #61dafb",
-              borderRadius: "25px",
-            }}
-          >
-            <button
-              className="btn"
-              onClick={async () => {
-                let clickResponse = await lazy();
-                if (clickResponse === "Collection created successfully.") {
-                  let collectionPage =
-                    "/collection/" +
-                    account +
-                    defaultForm[0].replace(/\s+/g, "");
-                  router.push(collectionPage);
-                }
-              }}
-            >
-              {" "}
-              Lazy Minting
-            </button>
-            <h4>Costs Gas</h4>
-            <h4>More Secure.</h4>
+          <div>
+            <h4>You're all set!</h4>
+            <h4>You won't be able to change anything after deploying.</h4>
             <h5>
-              A contract will be deployed on chain containing all the metadata.
-              Minting is randomized using Chainlink VRF.
+              You might not be able to view your collection for 15-20 minutes
+              after creation. The IPFS servers take some time.
             </h5>
-            <a href="https://docs.chain.link/docs/chainlink-vrf/">
-              Learn about chainlink VRF
-            </a>
-          </div>
-          <div
-            style={{
-              padding: "2.5rem",
-              border: "1px solid #61dafb",
-              borderRadius: "25px",
-            }}
-          >
             <button
               className="btn"
               onClick={async () => {
@@ -274,21 +242,19 @@ const Article = () => {
               }}
             >
               {" "}
-              Lazier Minting
+              Deploy Collection
             </button>
-            <h4>No Gas Fee</h4>
-            <h4>Faster</h4>
-            <h5>Minting is randomized using Python randomizer.</h5>
           </div>
         </div>
         <div>
+          <h4>Have you reviewed everything?</h4>
           <button
             className="btn"
             onClick={() => {
               setFormpage(3);
             }}
           >
-            {"<"}Back
+            {"<"}Edit Collection
           </button>
         </div>
       </>
@@ -299,7 +265,7 @@ const Article = () => {
     const ipfsFilePin = async (cardIndex) => {
       let traitNumber = 0;
       let imageData = imageDataArray[cardIndex];
-      const myURL = "http://localhost:8000/nft/multifileupload";
+      const myURL = BASE_URL + "nft/multifileupload";
       const formData = new FormData();
       defaultTraitForm.map((trait) => {
         if (trait.length !== 0) {

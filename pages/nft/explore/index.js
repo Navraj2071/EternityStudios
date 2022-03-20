@@ -3,6 +3,7 @@ import Footer from "../../../custom_modules/footer";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 import React from "react";
+import BASE_URL from "../../../apiConfig";
 
 const ExplorePage = ({ randomData }) => {
   const [imageArray, setImageArray] = useState({});
@@ -59,7 +60,7 @@ const ExplorePage = ({ randomData }) => {
     let contract_address_searched = document.getElementById("searchBox").value;
     let token_id = 1;
     let response = await fetch(
-      "http://localhost:8000/nft/getNFT?request_type=withContract&asset_id=" +
+      BASE_URL + "nft/getNFT?request_type=withContract&asset_id=" +
         contract_address_searched +
         "_" +
         token_id
@@ -168,7 +169,7 @@ export default ExplorePage;
 
 const getRandomData = async () => {
   let randomnft = await fetch(
-    "http://localhost:8000/nft/getRandomNFT?number=10"
+    BASE_URL + "nft/getRandomNFT?number=10"
   )
     .then((resp) => {
       return resp.json();

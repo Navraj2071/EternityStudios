@@ -1,6 +1,7 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import { useEthers } from "@usedapp/core";
+import BASE_URL from "../apiConfig";
 
 import Web3 from "web3";
 import { useRouter } from "next/router";
@@ -15864,7 +15865,7 @@ const UploadSection = () => {
     trait_type,
     trait_value
   ) => {
-    const myURL = "http://localhost:8000/nft/fileupload";
+    const myURL = BASE_URL + "nft/fileupload";
     const formdata = new FormData();
     formdata.append("nft_file", im);
     formdata.append("account", myaccount);
@@ -15891,7 +15892,7 @@ const UploadSection = () => {
   };
 
   const saveNFTData = async (metadata_uri, contract_address) => {
-    const savingURL = "http://localhost:8000/nft/createNFT";
+    const savingURL = BASE_URL + "nft/createNFT";
     let formData = new FormData();
     formData.append("owner", account);
     formData.append("metadataURL", metadata_uri);

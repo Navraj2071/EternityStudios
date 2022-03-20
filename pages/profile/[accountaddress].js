@@ -5,8 +5,9 @@ import React from "react";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 import { useEthers } from "@usedapp/core";
+import BASE_URL from "../../apiConfig";
 
-const apiURL = "http://localhost:8000/assets/addprofile";
+const apiURL = BASE_URL + "assets/addprofile";
 const getProfileData = async (
   profileAccount,
   profileName,
@@ -99,7 +100,7 @@ const ProfilePage = ({ profileData }) => {
     formdata.append("description", profileData["description"]);
     formdata.append("trait_type", "Coolness Factor");
     formdata.append("value", 100);
-    let profilepicURL = await fetch("http://localhost:8000/nft/fileupload", {
+    let profilepicURL = await fetch(BASE_URL + "nft/fileupload", {
       method: "POST",
       body: formdata,
     })
@@ -134,7 +135,7 @@ const ProfilePage = ({ profileData }) => {
 
   const getProfileSingles = async () => {
     let profileSingles = await fetch(
-      "http://localhost:8000/nft/profileSingles?account=" + queryaccount
+      BASE_URL + "nft/profileSingles?account=" + queryaccount
     )
       .then((resp) => {
         return resp.json();
@@ -170,7 +171,7 @@ const ProfilePage = ({ profileData }) => {
 
   const getProfileCollections = async () => {
     let collections = await fetch(
-      "http://localhost:8000/nft/profileCollections?account=" + queryaccount
+      BASE_URL + "nft/profileCollections?account=" + queryaccount
     )
       .then((resp) => {
         return resp.json();

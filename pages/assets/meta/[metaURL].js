@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import AssetPage from "../[assetId]";
+import BASE_URL from "../../../apiConfig";
 
 const AssetPagewithMeta = ({ assetData }) => {
   return <>{AssetPage({ assetData })};</>;
@@ -9,7 +10,7 @@ export default AssetPagewithMeta;
 
 const getAssetData = async (assetId) => {
   let response = await fetch(
-    "http://localhost:8000/nft/getNFT?request_type=withMetadata&metadataURL=" +
+    BASE_URL + "nft/getNFT?request_type=withMetadata&metadataURL=" +
       assetId
   )
     .then((resp) => {

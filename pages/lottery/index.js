@@ -7,9 +7,6 @@ const LotteryArticle = () => {
 
   const text = "Coming Soon....";
 
-  const src =
-    "https://lh3.googleusercontent.com/HnOFidKUA9OcvZj1GUtFxexnpYDX0g9s6alBXCJHxidPt3HS67NYMY5hCIaGbw7BGLzoHk5GAr-zWKR0EZMSgT09vdMoYmHusX0b=w600";
-
   return (
     <section className="section-vertical">
       <div className="writing">
@@ -18,7 +15,7 @@ const LotteryArticle = () => {
       </div>
 
       <div className="illustration">
-        <img src={src} alt="NFT" />
+        <img src="/Lottery.png" alt="NFT" />
       </div>
     </section>
   );

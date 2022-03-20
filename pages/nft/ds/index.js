@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { Slideshow } from "../../../custom_modules/slideshow";
 import UploadSection from "../../../custom_modules/uploadCustom";
+import BASE_URL from "../../../apiConfig";
 
 const DeployArticle = () => {
   const title = "Deploy Single NFT";

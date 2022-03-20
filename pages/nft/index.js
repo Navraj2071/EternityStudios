@@ -5,13 +5,11 @@ import Link from "next/link";
 import { useState } from "react";
 import { useEffect } from "react";
 import { useRouter } from "next/router";
+import BASE_URL from "../../apiConfig";
 
 const DeployArticle = () => {
   const title = "Deploy NFTs";
   const text = "Easy Peasy Lemon Squeezy.";
-
-  const src =
-    "https://lh3.googleusercontent.com/HnOFidKUA9OcvZj1GUtFxexnpYDX0g9s6alBXCJHxidPt3HS67NYMY5hCIaGbw7BGLzoHk5GAr-zWKR0EZMSgT09vdMoYmHusX0b=w600";
 
   return (
     <section className="section">
@@ -29,7 +27,7 @@ const DeployArticle = () => {
       </div>
 
       <div className="illustration">
-        <img src={src} alt="NFT" />
+        <img src="/NFT.png" alt="NFT" />
       </div>
     </section>
   );
@@ -50,7 +48,7 @@ const ExploreArticle = () => {
   const getRandomNFTs = async () => {
     let NFTarray = [];
     let randomNFT = await fetch(
-      "http://localhost:8000/nft/getRandomNFT?number=10"
+      BASE_URL + "nft/getRandomNFT?number=10"
     )
       .then((resp) => {
         return resp.json();
@@ -144,14 +142,11 @@ const CreateArticle = () => {
   const text =
     "A tiny little tool box to create your own art piece and deploy as an NFT.";
 
-  const src =
-    "https://lh3.googleusercontent.com/HnOFidKUA9OcvZj1GUtFxexnpYDX0g9s6alBXCJHxidPt3HS67NYMY5hCIaGbw7BGLzoHk5GAr-zWKR0EZMSgT09vdMoYmHusX0b=w600";
-
   const router = useRouter();
   return (
     <section className="section">
       <div className="illustration">
-        <img src={src} alt="NFT" />
+        <img src="/Create.png" alt="NFT" />
       </div>
       <div className="writing">
         <h1>{title}</h1>

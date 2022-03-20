@@ -1,8 +1,9 @@
 import Navbar from "../../custom_modules/navbar";
 import Footer from "../../custom_modules/footer";
-
+import React from "react";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
+import BASE_URL from "../../apiConfig";
 
 const AssetPage = ({ assetData }) => {
   if (assetData["response"] === "Server error") {
@@ -31,7 +32,6 @@ const AssetPage = ({ assetData }) => {
   }, []);
   const getNftIPFSData = async () => {
     let ipfsURL = assetData["assetMetadataURL"];
-    console.log(ipfsURL);
     let response = await fetch(ipfsURL);
     let nftData = await response.json();
     setImageURL(nftData["image"]);
@@ -39,6 +39,12 @@ const AssetPage = ({ assetData }) => {
     setAssetDescription(nftData["description"]);
     setTraits(nftData["traits"]);
     return nftData;
+  };
+
+  const getRandomKey = (starterString) => {
+    let randomKey =
+      Math.floor(Math.random() * 1000, 3).toString() + starterString;
+    return randomKey;
   };
 
   const NFTCard = () => {
@@ -53,11 +59,11 @@ const AssetPage = ({ assetData }) => {
               <h3>Attributes:</h3>
               {traits.map((trait) => {
                 return (
-                  <>
+                  <React.Fragment key={getRandomKey(trait["trait_ype"])}>
                     <h3>
                       {trait["trait_type"]}: {trait["value"]}
                     </h3>
-                  </>
+                  </React.Fragment>
                 );
               })}
               <h2>{!assetData["assetOnSale"] ? "Sold out" : "Available"}</h2>
@@ -113,7 +119,7 @@ export default AssetPage;
 
 const getAssetData = async (assetId) => {
   let response = await fetch(
-    "http://localhost:8000/nft/getNFT?request_type=withContract&asset_id=" +
+    BASE_URL + "nft/getNFT?request_type=withContract&asset_id=" +
       assetId
   )
     .then((resp) => {

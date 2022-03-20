@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import Navbar from "../../../custom_modules/navbar";
 import Footer from "../../../custom_modules/footer";
+import BASE_URL from "../../../apiConfig";
 
 const CreatePage = () => {
   const [w1, setw1] = useState("Loading...");

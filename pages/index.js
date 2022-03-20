@@ -6,6 +6,7 @@ import Footer from "../custom_modules/footer";
 import Link from "next/link";
 import { useEthers } from "@usedapp/core";
 import { Router, useRouter } from "next/dist/client/router";
+import BASE_URL from "../apiConfig";
 
 const NftArticle = () => {
   const title = "NFTs";
@@ -87,7 +88,7 @@ const LotteryArticle = () => {
   return (
     <section className="section">
       <div className="illustration">
-        <img src="/favicon.ico" alt="NFT" />
+        <img src="/Lottery.png" alt="NFT" />
       </div>
 
       <div className="writing">
@@ -125,7 +126,7 @@ export default Article;
 
 const getRandomNFTs = async (arrayNumber) => {
   let randomNFTs = await fetch(
-    "http://localhost:8000/nft/getRandomNFT?number=" + arrayNumber
+    BASE_URL + "nft/getRandomNFT?number=" + arrayNumber
   )
     .then((resp) => {
       return resp.json();
