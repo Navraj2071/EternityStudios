@@ -252,7 +252,7 @@ const BlogPage = () => {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          padding: "200px",
+          padding: "200px 0px",
         }}
       >
         <div style={{ width: "50vw" }}>

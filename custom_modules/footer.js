@@ -20,13 +20,13 @@ const footer = () => {
       </section>
       <section>
         If you like my work and want to support me, please do that
-        <a href="/fundme" style={{ color: "#61dafb" }}>
+        <a href="/contactMe" style={{ color: "#61dafb" }}>
           {" "}
           here.
         </a>
         <p>
-          For any complaints/queries/suggestion, please write to me at
-          navraj2071@outlook.com
+          For any complaints/ queries/ suggestion, please write to me at
+          eternity3dstudios@gmail.com
         </p>
       </section>
     </div>

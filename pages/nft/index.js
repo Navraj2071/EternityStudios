@@ -98,11 +98,22 @@ const ExploreArticle = () => {
     getRandomNFTs();
   }, []);
   return (
-    <section className="section-vertical">
-      <div className="writing">
-        <h1>{title}</h1>
-        <h2>{text}</h2>
-      </div>
+    <>
+      <section className="section">
+        <div className="writing">
+          <h1>{title}</h1>
+          <h2>{text}</h2>
+          <button
+            className="btn"
+            onClick={() => {
+              router.push("/nft/explore");
+            }}
+          >
+            Explore more
+          </button>
+        </div>
+      </section>
+
       <div className="cardholder">
         {NFTarray.map((nft) => {
           return (
@@ -119,18 +130,7 @@ const ExploreArticle = () => {
           );
         })}
       </div>
-
-      <div className="writing">
-        <button
-          className="btn"
-          onClick={() => {
-            router.push("/nft/explore");
-          }}
-        >
-          Explore more
-        </button>
-      </div>
-    </section>
+    </>
   );
 };
 
@@ -143,9 +143,6 @@ const CreateArticle = () => {
   const router = useRouter();
   return (
     <section className="section">
-      <div className="illustration">
-        <img src="/Create.png" alt="NFT" />
-      </div>
       <div className="writing">
         <h1>{title}</h1>
         <h2>{text}</h2>
@@ -153,6 +150,9 @@ const CreateArticle = () => {
         <button className="btn" onClick={() => router.push("/nft/create")}>
           Get Started
         </button>
+      </div>
+      <div className="illustration">
+        <img src="/Create.png" alt="NFT" />
       </div>
     </section>
   );

@@ -92,15 +92,16 @@ const AssetPage = ({ assetData }) => {
                   View Profile
                 </button>
               </h3>
-
-              <button
-                className="btn"
-                onClick={() => {
-                  router.push("/collection/" + assetData["assetCollection"]);
-                }}
-              >
-                View Collection
-              </button>
+              <div>
+                <button
+                  className="btn"
+                  onClick={() => {
+                    router.push("/collection/" + assetData["assetCollection"]);
+                  }}
+                >
+                  View Collection
+                </button>
+              </div>
             </div>
           </div>
         </div>

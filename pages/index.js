@@ -1,5 +1,5 @@
 import React from "react";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useState } from "react";
 import Navbar from "../custom_modules/navbar";
 import Footer from "../custom_modules/footer";
@@ -12,45 +12,46 @@ const NftArticle = () => {
   const title = "NFTs";
   const textArray = ["Create", "Deploy", "Explore"];
   const [text, setText] = useState(textArray[0]);
-  const defaultImage = [
-    {
-      image:
-        "https://lh3.googleusercontent.com/HnOFidKUA9OcvZj1GUtFxexnpYDX0g9s6alBXCJHxidPt3HS67NYMY5hCIaGbw7BGLzoHk5GAr-zWKR0EZMSgT09vdMoYmHusX0b=w600",
-      metadata: "",
-    },
-  ];
-  const [srcArray, setsrcArray] = useState([...defaultImage]);
-  const [src, setSrc] = useState(srcArray[0]);
+  const srcArray = useRef({ image: "/NFT.png", metadata: ["/"] });
+  const [src, setSrc] = useState({ ...srcArray.current[0] });
+  const textIndex = useRef(0);
+  const srcIndex = useRef(0);
   const router = useRouter();
 
   useEffect(() => {
-    const textToBeSet = () => {
-      if (textArray.indexOf(text) == textArray.length - 1) {
-        return textArray[0];
-      } else {
-        return textArray[textArray.indexOf(text) + 1];
-      }
+    let textAnim = setInterval(() => {
+      textIndex.current = textIndex.current === 2 ? 0 : textIndex.current + 1;
+      setText(textArray[textIndex.current]);
+    }, 800);
+
+    let ImgAnim = setInterval(() => {
+      srcIndex.current =
+        srcIndex.current === srcArray.current.length - 1
+          ? 0
+          : srcIndex.current + 1;
+      setSrc({
+        image: srcArray.current[srcIndex.current]["image"],
+        metadata: srcArray.current[srcIndex.current]["metadata"][0],
+      });
+    }, 2000);
+    poppulateRandomImages();
+    return () => {
+      clearInterval(textAnim);
+      clearInterval(ImgAnim);
     };
-    const srcToBeSet = () => {
-      if (srcArray.indexOf(src) == srcArray.length - 1) {
-        return srcArray[0];
-      } else {
-        return srcArray[srcArray.indexOf(src) + 1];
-      }
-    };
-    setTimeout(() => setText(textToBeSet), 800);
-    setTimeout(() => setSrc(srcToBeSet), 5000);
-    if (JSON.stringify(srcArray) === JSON.stringify(defaultImage)) {
-      poppulateRandomImages();
-    }
-  }, [text]);
+  }, []);
 
   const poppulateRandomImages = async () => {
     let randomImageArray = await getRandomImages(5);
-    setsrcArray([...randomImageArray]);
+    try {
+      srcArray.current = [...randomImageArray];
+    } catch {
+      srcArray.current = srcArray.current;
+    }
   };
 
   const goToAssetMeta = (metaURLBase) => {
+    console.log(metaURLBase);
     let metaURL = metaURLBase.split("https://")[1];
     let metaURL1 = metaURL.replaceAll("/", "slasheternity");
     let metaURL2 = metaURL1.replaceAll("?", "questionmarketernity");
@@ -73,7 +74,7 @@ const NftArticle = () => {
           src={src["image"]}
           alt="NFT"
           onClick={() => {
-            goToAssetMeta(src["metadata"][0]);
+            goToAssetMeta(src["metadata"]);
           }}
         />
       </div>
@@ -87,10 +88,6 @@ const LotteryArticle = () => {
 
   return (
     <section className="section">
-      <div className="illustration">
-        <img src="/Lottery.png" alt="NFT" />
-      </div>
-
       <div className="writing">
         <h1>{title}</h1>
         <h2>{text}</h2>
@@ -98,6 +95,9 @@ const LotteryArticle = () => {
         <Link href="/lottery" passHref>
           <button className="btn">Play</button>
         </Link>
+      </div>
+      <div className="illustration">
+        <img src="/Lottery.png" alt="NFT" />
       </div>
     </section>
   );
@@ -168,31 +168,4 @@ const getRandomImages = async (arrayNumber) => {
       }
     }
   }
-  return [
-    {
-      image:
-        "https://lh3.googleusercontent.com/HnOFidKUA9OcvZj1GUtFxexnpYDX0g9s6alBXCJHxidPt3HS67NYMY5hCIaGbw7BGLzoHk5GAr-zWKR0EZMSgT09vdMoYmHusX0b=w600",
-      metadata: "",
-    },
-    {
-      image:
-        "https://lh3.googleusercontent.com/NTVJXGApcSVsfYZFHcCZFERcO94zLZqMf05iDyhP7b5FClwvMWMBxkQ28pHy0O_iEUFJqO2BTXM-UqNZVyz9Vlo_v09Wmc3UjRrMvg=w600",
-      metadata: "",
-    },
-    {
-      image:
-        "https://lh3.googleusercontent.com/RRrDcbDgvg9kXiPWirdL5x72_LJnjX5KaLIkCQBo7kmWHglsaBJuVdsgjPcNvjh0zoklOjD-t-xiFM9VTlyz57atb3rqfFF7vmZZrWE=w600",
-      metadata: "",
-    },
-    {
-      image:
-        "https://lh3.googleusercontent.com/eIhk029TEWgBb5vhVUJIa1h1iLj11VJSlUCoEDz5zC7drNmGjcxPAU6GbXCxwoLdExqhVOwaMdWLgAHHLmOkdrrs3mDNXxjP5kes4w=w600",
-      metadata: "",
-    },
-  ];
 };
-
-// export async function getServerSideProps() {
-//   let randomImages = await getRandomImages(5);
-//   return { props: { imageArray: randomImages } };
-// }

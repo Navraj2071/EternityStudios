@@ -181,9 +181,14 @@ const ProfilePage = ({ profileData }) => {
       if (collections["response"] === "Success") {
         let profileCollections = [];
         for (let i = 0; i < parseInt(collections["number"]); i++) {
-          let firstNFTmetadataURL =
-            collections["collection" + i]["nft_data"]["data0"];
-
+          let firstNFTmetadataURL = "";
+          try {
+            firstNFTmetadataURL = JSON.parse(
+              collections["collection" + i]["nft_data"]
+            )["nft0"];
+          } catch {
+            firstNFTmetadataURL = "";
+          }
           let NFTdata = await getNFTData(firstNFTmetadataURL);
           if (NFTdata !== "Server error") {
             collections["collection" + i]["image"] = NFTdata["image"];
@@ -238,7 +243,15 @@ const ProfilePage = ({ profileData }) => {
     <>
       <Navbar />
       <div className="profile">
-        <div style={{ width: "20rem", height: "20rem" }}>
+        <div
+          style={{
+            width: "20rem",
+            maxWidth: "80vw",
+            height: "20rem",
+            display: "flex",
+            padding: "20px",
+          }}
+        >
           <img
             src={profilepic}
             alt={queryaccount}
@@ -276,14 +289,14 @@ const ProfilePage = ({ profileData }) => {
                 style={{
                   position: "absolute",
                   top: "100px",
-                  left: "30vw",
+                  left: "10vw",
                   backgroundColor: "white",
                   borderRadius: "20px",
                 }}
               >
                 <div
                   style={{
-                    width: "40vw",
+                    width: "80vw",
                     padding: "20px",
                     border: "2px solid rgba(0, 0, 0, 0.1)",
                     borderRadius: "20px",

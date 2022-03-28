@@ -60,7 +60,8 @@ const ExplorePage = ({ randomData }) => {
     let contract_address_searched = document.getElementById("searchBox").value;
     let token_id = 1;
     let response = await fetch(
-      BASE_URL + "nft/getNFT?request_type=withContract&asset_id=" +
+      BASE_URL +
+        "nft/getNFT?request_type=withContract&asset_id=" +
         contract_address_searched +
         "_" +
         token_id
@@ -142,7 +143,7 @@ const ExplorePage = ({ randomData }) => {
       >
         <div
           className="myform"
-          style={{ width: "50vw", alignItems: "center", padding: "100px" }}
+          style={{ width: "75vw", alignItems: "center", padding: "100px 0px" }}
         >
           <input
             type="text"
@@ -168,9 +169,7 @@ const ExplorePage = ({ randomData }) => {
 export default ExplorePage;
 
 const getRandomData = async () => {
-  let randomnft = await fetch(
-    BASE_URL + "nft/getRandomNFT?number=10"
-  )
+  let randomnft = await fetch(BASE_URL + "nft/getRandomNFT?number=10")
     .then((resp) => {
       return resp.json();
     })

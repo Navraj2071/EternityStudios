@@ -792,7 +792,7 @@ const Article = () => {
           margin: "auto",
         }}
       >
-        <section className="section-vertical">
+        <section className="section" style={{ flexDirection: "column" }}>
           <div className="writing">
             <h1>NFT Collection</h1>
             <h2>Metadata will be stored on ipfs</h2>

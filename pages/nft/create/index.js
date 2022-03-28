@@ -78,24 +78,24 @@ const CreatePage = () => {
           display: "grid",
           gridTemplateColumns: "1fr 1fr",
           gap: "20px",
-          height: "50vh",
+          height: "60vh",
         }}
       >
         <div
           style={{
             textAlign: "right",
-            fontSize: "5rem",
+            fontSize: "10vw",
             color: "#61dafb",
-            paddingTop: "20vh",
+            paddingTop: "5vh",
           }}
         >
           {w1} {w2}
         </div>
-        <div style={{ fontSize: "5rem", paddingTop: "20vh" }}>
+        <div style={{ fontSize: "10vw", paddingTop: "5vh" }}>
           {w3} {w4} {w5}
         </div>
       </div>
-      <div style={{ height: "30vh" }}>
+      <div style={{ height: "20vh" }}>
         <h2>Sorry about that.</h2>
         <h2>Create toolbox is coming soon...</h2>
       </div>
