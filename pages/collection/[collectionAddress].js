@@ -176,7 +176,7 @@ const CollectionPage = ({ collectionData }) => {
                         "questionmarketernity"
                       );
                       let metaURL3 = metaURL2.replaceAll(".", "doteternity");
-                      router.push("/assets/meta/" + metaURL3);
+                      router.push("/asset/" + metaURL3);
                     }}
                   >
                     <img src={nft["image"]} alt="" />
@@ -527,14 +527,16 @@ const CollectionPage = ({ collectionData }) => {
                       style={{ width: "1.75em", border: "none" }}
                     />
                   </div>
-                  <button
-                    className="btn"
-                    onClick={mintButton}
-                    id="mint-button"
-                    disabled={mintButtonDisabled}
-                  >
-                    _Mint NFT
-                  </button>
+                  <div>
+                    <button
+                      className="btn"
+                      onClick={mintButton}
+                      id="mint-button"
+                      disabled={mintButtonDisabled}
+                    >
+                      _Mint NFT
+                    </button>
+                  </div>
                   <h4>{loadingStatus}</h4>
                   <h4 style={{ color: "blue" }}>{connectionWarning}</h4>
                   <div>
@@ -550,7 +552,9 @@ const CollectionPage = ({ collectionData }) => {
                 ""
               ) : (
                 <div className="nft-mint-2">
-                  <button className="btn">Add to wishlist</button>
+                  <div>
+                    <button className="btn">Add to wishlist</button>
+                  </div>
                   <h4>You can view your wishlist in your profile.</h4>
                   <h4 style={{ color: "blue" }}>{connectionWarning}</h4>
                 </div>

@@ -4,10 +4,8 @@ import AppContext from "../AppContext";
 import { DAppProvider, ChainId } from "@usedapp/core";
 
 function MyApp({ Component, pageProps }) {
-  const [isConnected, setIsConnected] = useState(undefined);
-  const [userAccount, setAccount] = useState(undefined);
   const config = {
-    multicallAddresses: { 4: "Network Rinkeby" },
+    multicallAddresses: { 1: "Ethereum Mainnet", 4: "Network Rinkeby" },
     networks: [ChainId.Rinkeby, ChainId.Mainnet],
   };
 

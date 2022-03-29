@@ -246,6 +246,8 @@ const Article = () => {
                     account +
                     defaultForm[0].replace(/\s+/g, "");
                   router.push(collectionPage);
+                } else {
+                  alert("Something went wrong at our end. Please try again.");
                 }
               }}
             >
@@ -847,7 +849,7 @@ const Article = () => {
                 formPage === 4 ? "0 0 20px rgba(0, 0, 0, 0.15)" : "none",
             }}
           >
-            <h2>Depoy</h2>
+            <h2>Deploy</h2>
             {formPage === 4 ? (
               <>
                 <div className="description-card-content">

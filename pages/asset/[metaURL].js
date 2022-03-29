@@ -1,6 +1,6 @@
 import { useEffect } from "react";
-import AssetPage from "../[assetId]";
-import BASE_URL from "../../../apiConfig";
+import AssetPage from "../assets/[assetId]";
+import BASE_URL from "../../apiConfig";
 
 const AssetPagewithMeta = ({ assetData }) => {
   return <>{AssetPage({ assetData })};</>;

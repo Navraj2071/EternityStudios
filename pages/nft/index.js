@@ -78,7 +78,7 @@ const ExploreArticle = () => {
     let metaURL1 = metaURL.replaceAll("/", "slasheternity");
     let metaURL2 = metaURL1.replaceAll("?", "questionmarketernity");
     let metaURL3 = metaURL2.replaceAll(".", "doteternity");
-    router.push("/assets/meta/" + metaURL3);
+    router.push("/asset/" + metaURL3);
   };
 
   useEffect(() => {

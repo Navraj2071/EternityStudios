@@ -80,7 +80,7 @@ const ExplorePage = ({ randomData }) => {
       let metaURL1 = metaURL.replaceAll("/", "slasheternity");
       let metaURL2 = metaURL1.replaceAll("?", "questionmarketernity");
       let metaURL3 = metaURL2.replaceAll(".", "doteternity");
-      router.push("/assets/meta/" + metaURL3);
+      router.push("/asset/" + metaURL3);
     } else {
       setcontractQuery(response["response"]);
     }
@@ -116,7 +116,7 @@ const ExplorePage = ({ randomData }) => {
                       "questionmarketernity"
                     );
                     let metaURL3 = metaURL2.replaceAll(".", "doteternity");
-                    router.push("/assets/meta/" + metaURL3);
+                    router.push("/asset/" + metaURL3);
                   }}
                 >
                   <img src={imageArray[index]} alt="NFT" />
