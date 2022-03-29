@@ -18,7 +18,7 @@ const DeployArticle = () => {
 
   return (
     <>
-      <section className="section-vertical">
+      <section className="section" style={{ flexDirection: "column" }}>
         <div className="writing">
           <h1>{title}</h1>
           <h2>{text}</h2>

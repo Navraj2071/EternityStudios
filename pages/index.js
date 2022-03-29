@@ -13,7 +13,7 @@ const NftArticle = () => {
   const textArray = ["Create", "Deploy", "Explore"];
   const [text, setText] = useState(textArray[0]);
   const srcArray = useRef({ image: "/NFT.png", metadata: ["/"] });
-  const [src, setSrc] = useState({ ...srcArray.current[0] });
+  const [src, setSrc] = useState({ image: "/NFT.png", metadata: ["/"] });
   const textIndex = useRef(0);
   const srcIndex = useRef(0);
   const router = useRouter();
@@ -29,10 +29,14 @@ const NftArticle = () => {
         srcIndex.current === srcArray.current.length - 1
           ? 0
           : srcIndex.current + 1;
-      setSrc({
-        image: srcArray.current[srcIndex.current]["image"],
-        metadata: srcArray.current[srcIndex.current]["metadata"][0],
-      });
+      try {
+        setSrc({
+          image: srcArray.current[srcIndex.current]["image"],
+          metadata: srcArray.current[srcIndex.current]["metadata"][0],
+        });
+      } catch {
+        setSrc({ image: "/NFT.png", metadata: ["/"] });
+      }
     }, 2000);
     poppulateRandomImages();
     return () => {
@@ -146,19 +150,10 @@ const getRandomImages = async (arrayNumber) => {
   if (randomNFTs !== "Server error") {
     if (randomNFTs["response"] === "Success") {
       for (let i = 0; i < arrayNumber; i++) {
-        let randomImage = await fetch(randomNFTs["nft" + i]["metadataURL"])
-          .then((resp) => {
-            return resp.json();
-          })
-          .then((data) => {
-            return data;
-          })
-          .catch((error) => {
-            return "Server error";
-          });
-        if (randomImage !== "Server error") {
+        let randomImage = randomNFTs["nft" + i]["imageURL"];
+        if (randomImage !== "") {
           imageArray.push({
-            image: randomImage["image"],
+            image: randomImage,
             metadata: [randomNFTs["nft" + i]["metadataURL"]],
           });
         }

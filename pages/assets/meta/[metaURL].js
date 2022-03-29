@@ -10,8 +10,7 @@ export default AssetPagewithMeta;
 
 const getAssetData = async (assetId) => {
   let response = await fetch(
-    BASE_URL + "nft/getNFT?request_type=withMetadata&metadataURL=" +
-      assetId
+    BASE_URL + "nft/getNFT?request_type=withMetadata&metadataURL=" + assetId
   )
     .then((resp) => {
       return resp.json();
@@ -57,6 +56,8 @@ export async function getServerSideProps(context) {
         assetContract: assetData["contract_address"],
         assetTokenId: assetData["token_id"],
         assetNetwork: assetData["network"],
+        assetLocalToken: assetData["local_token_id"],
+        assetImageURL: assetData["imageURL"],
         assetQuery: queryAsset,
       },
     },

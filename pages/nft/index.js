@@ -35,7 +35,6 @@ const DeployArticle = () => {
 
 const ExploreArticle = () => {
   const router = useRouter();
-
   const title = "Explore NFTs";
   const text = "Look at all these NFTs deployed by creative people like you. ";
   const sampleNFT = {
@@ -59,23 +58,11 @@ const ExploreArticle = () => {
       });
     if (randomNFT !== "Server error") {
       for (let i = 0; i < 10; i++) {
-        let randomImage = await fetch(randomNFT["nft" + i]["metadataURL"])
-          .then((resp) => {
-            return resp.json();
-          })
-          .then((data) => {
-            return data;
-          })
-          .catch((error) => {
-            return "Server error";
-          });
-        if (randomImage !== "Server error") {
+        if (randomNFT["nft" + i]["imageURL"] !== "") {
           NFTarray.push({
-            image: randomImage["image"],
+            image: randomNFT["nft" + i]["imageURL"],
             metadata: randomNFT["nft" + i]["metadataURL"],
           });
-        } else {
-          NFTarray.push(sampleNFT);
         }
       }
       setNFTarray([...NFTarray]);

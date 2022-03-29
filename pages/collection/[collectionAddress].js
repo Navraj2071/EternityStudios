@@ -50,62 +50,100 @@ const CollectionPage = ({ collectionData }) => {
   const [mintButtonDisabled, setMintButtonDisabled] = useState(false);
   Contract.setProvider(Web3.givenProvider);
 
-  const getRandomImage = async () => {
+  const getRandomImage = () => {
     let randIndex =
       Math.floor(Math.random() * 1000) % collectionData["collectionSupply"];
     let randURL = String(
-      JSON.parse(collectionData["collectionMetadata"])[
+      JSON.parse(collectionData["collectionImageData"])[
         "nft" + String(randIndex)
       ]
     );
-    const imgSrc = await fetch(randURL);
-    const data = await imgSrc.json();
-    const imageURL = data["image"];
+
+    const imageURL = randURL;
     return imageURL;
   };
 
   const setImages = async () => {
-    let img4 = await getRandomImage();
-
+    let img4 = getRandomImage();
     setImg4(img4);
   };
 
   const getNFTdata = async (metadataURL) => {
-    let jsonData = await fetch(metadataURL);
-    let jsonDataparsed = await jsonData.json();
-    return jsonDataparsed;
+    let NFTdata = await fetch(metadataURL)
+      .then((resp) => {
+        return resp.json();
+      })
+      .then((data) => {
+        return data;
+      })
+      .catch((err) => {
+        return "Server error";
+      });
+    return NFTdata;
+  };
+
+  const poppulateTempData = async () => {
+    let tempmetadataArray = [];
+    for (let i = 0; i < collectionData["collectionSupply"]; i++) {
+      let metadata = {
+        name: "...",
+        owner: collectionData["collectionOwner"],
+        image: JSON.parse(collectionData["collectionImageData"])["nft" + i],
+        description: "...",
+        is_minted: false,
+        traits: [{ trait_type: "...", value: "..." }],
+      };
+      tempmetadataArray.push(metadata);
+    }
+    setMetadataArray([...tempmetadataArray]);
+    return tempmetadataArray;
   };
 
   const poppulatemetadata = async () => {
-    metadataArray = [];
+    let tempmetadataArray = await poppulateTempData();
+    let numberOfavailableNFTS = 0;
     for (let i = 0; i < collectionData["collectionSupply"]; i++) {
       let metadataURL = JSON.parse(collectionData["collectionMetadata"])[
         "nft" + i
       ];
-      let metadata = await getNFTdata(metadataURL);
+      let metadata = {
+        name: "...",
+        owner: collectionData["collectionOwner"],
+        image: JSON.parse(collectionData["collectionImageData"])["nft" + i],
+        description: "...",
+        is_minted: false,
+        traits: [{ trait_type: "...", value: "..." }],
+      };
       let extraPropsURL =
         BASE_URL +
         "nft/getNFT?request_type=withMetadata&metadataURL=" +
         metadataURL;
-      let extraProps = await getNFTdata(extraPropsURL);
-      metadata["on_sale"] = extraProps["on_sale"];
-      metadata["is_minted"] = extraProps["is_minted"];
-      metadata["price"] = extraProps["price"];
-      metadata["owner"] = extraProps["owner"];
-      metadata["metadataURL"] = metadataURL;
-      metadataArray.push(metadata);
-    }
-
-    let numberOfavailableNFTS = 0;
-    metadataArray.map((item) => {
-      if (item["on_sale"] === true) {
-        numberOfavailableNFTS++;
+      let extraProps = await getNFTdata(extraPropsURL, i);
+      if (extraProps !== "Server error") {
+        metadata["on_sale"] = extraProps["on_sale"];
+        metadata["is_minted"] = extraProps["is_minted"];
+        metadata["price"] = extraProps["price"];
+        metadata["owner"] = extraProps["owner"];
+        metadata["metadataURL"] = metadataURL;
       }
-    });
-    if (numberOfavailableNFTS > 0) {
-      setanyNFTavailable(true);
+      let extrametadata = await getNFTdata(metadataURL);
+      if (extrametadata !== "Server error") {
+        metadata["name"] = extrametadata["name"];
+        metadata["description"] = extrametadata["description"];
+        metadata["image"] = extrametadata["image"];
+        metadata["traits"] = extrametadata["traits"];
+      }
+      tempmetadataArray[i] = metadata;
+      tempmetadataArray.map((item) => {
+        if (item["on_sale"] === true) {
+          numberOfavailableNFTS++;
+        }
+      });
+      if (numberOfavailableNFTS > 0) {
+        setanyNFTavailable(true);
+      }
+      setMetadataArray([...tempmetadataArray]);
     }
-    setMetadataArray([...metadataArray]);
   };
 
   const getRandomKey = (starterString) => {
@@ -230,6 +268,10 @@ const CollectionPage = ({ collectionData }) => {
         }
       });
     }, 1000);
+
+    return () => {
+      clearInterval(timerInterval);
+    };
   }, [account, chainId]);
 
   const getGas = async (tokenURI) => {
@@ -562,6 +604,7 @@ export async function getServerSideProps(context) {
           collectionLaunchTime: collectionData["launch_time"],
           collectionOwner: collectionData["owner"],
           collectionMetadata: collectionData["nft_data"],
+          collectionImageData: collectionData["image_data"],
           collectionContract: collectionData["contract"],
           collectionNetwork: collectionData["network"],
           collectionContractType: collectionData["contract_type"],

@@ -150,12 +150,16 @@ const Article = () => {
       formData.append("contract", "0x");
       formData.append("network", chainId);
       let collectionData = {};
+      let imageData = {};
       imageNameArray.map((item) => {
         let itemIndex = imageNameArray.indexOf(item);
         collectionData["nft" + String(itemIndex)] =
           metadataForm["IndividualMetadata"][item]["metadataURL"];
+        imageData["nft" + String(itemIndex)] =
+          metadataForm["IndividualMetadata"][item]["imageURL"];
       });
       formData.append("metadata", JSON.stringify(collectionData));
+      formData.append("image_data", JSON.stringify(imageData));
       const addcollectionURL = BASE_URL + "nft/addCollection";
       const response = await fetch(addcollectionURL, {
         method: "POST",
@@ -189,12 +193,16 @@ const Article = () => {
       formData.append("network", chainId);
       formData.append("contract_type", "simple");
       let collectionData = {};
+      let imageData = {};
       imageNameArray.map((item) => {
         let itemIndex = imageNameArray.indexOf(item);
         collectionData["nft" + String(itemIndex)] =
           metadataForm["IndividualMetadata"][item]["metadataURL"];
+        imageData["nft" + String(itemIndex)] =
+          metadataForm["IndividualMetadata"][item]["imageURL"];
       });
       formData.append("metadata", JSON.stringify(collectionData));
+      formData.append("image_data", JSON.stringify(imageData));
       const addcollectionURL = BASE_URL + "nft/addCollection";
       const response = await fetch(addcollectionURL, {
         method: "POST",
@@ -783,6 +791,79 @@ const Article = () => {
       return <Page4 />;
     }
   };
+
+  const Steps = () => {
+    return (
+      <>
+        <div className="description-card-holder">
+          <div
+            className="description-card"
+            style={{
+              boxShadow:
+                formPage === 2 ? "0 0 20px rgba(0, 0, 0, 0.15)" : "none",
+            }}
+          >
+            <h2>Collection Data</h2>
+            {formPage === 2 ? (
+              <>
+                <div className="description-card-content">
+                  <li>Fill Collection Data</li>
+                </div>
+              </>
+            ) : (
+              <></>
+            )}
+          </div>
+          <h1>{">"}</h1>
+          <div
+            className="description-card"
+            style={{
+              boxShadow:
+                formPage === 3 ? "0 0 20px rgba(0, 0, 0, 0.15)" : "none",
+            }}
+          >
+            <h2>Upload files</h2>
+            {formPage === 3 ? (
+              <>
+                <div className="description-card-content">
+                  <li>Fill in metadata</li>
+                  <li>Save data - Card turns greenish</li>
+                  <li>
+                    Create Metadata - Card turns green.{" "}
+                    <p>-Wait for card to turn blue.</p>{" "}
+                    <p>-Red card means error</p>{" "}
+                  </li>
+                </div>
+              </>
+            ) : (
+              <></>
+            )}
+          </div>
+          <h1>{">"}</h1>
+          <div
+            className="description-card"
+            style={{
+              boxShadow:
+                formPage === 4 ? "0 0 20px rgba(0, 0, 0, 0.15)" : "none",
+            }}
+          >
+            <h2>Depoy</h2>
+            {formPage === 4 ? (
+              <>
+                <div className="description-card-content">
+                  <li>Check data</li>
+                  <li>All cards should be blue</li>
+                  <li>Deploy</li>
+                </div>
+              </>
+            ) : (
+              <></>
+            )}
+          </div>
+        </div>
+      </>
+    );
+  };
   return (
     <>
       <Navbar />
@@ -795,7 +876,7 @@ const Article = () => {
         <section className="section" style={{ flexDirection: "column" }}>
           <div className="writing">
             <h1>NFT Collection</h1>
-            <h2>Metadata will be stored on ipfs</h2>
+            <Steps />
             <h4 style={{ color: "blue" }}>{connectionWarning}</h4>
           </div>
           <UploadSection />

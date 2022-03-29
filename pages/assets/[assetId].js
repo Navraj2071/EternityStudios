@@ -14,6 +14,7 @@ const AssetPage = ({ assetData }) => {
 
   useEffect(() => {
     if (assetData["response"] === "Success") {
+      setImageURL(assetData["assetImageURL"]);
       getNftIPFSData();
     }
   }, []);
@@ -21,7 +22,6 @@ const AssetPage = ({ assetData }) => {
     let ipfsURL = assetData["assetMetadataURL"];
     let response = await fetch(ipfsURL);
     let nftData = await response.json();
-    setImageURL(nftData["image"]);
     setAssetName(nftData["name"]);
     setAssetDescription(nftData["description"]);
     setTraits(nftData["traits"]);
@@ -161,6 +161,8 @@ export async function getServerSideProps(context) {
         assetContract: assetData["contract_address"],
         assetTokenId: assetData["token_id"],
         assetNetwork: assetData["network"],
+        assetImageURL: assetData["imageURL"],
+        assetLocalToken: assetData["local_token_id"],
         assetQuery: queryAsset,
       },
     },

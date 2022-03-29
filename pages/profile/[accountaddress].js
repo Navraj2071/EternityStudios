@@ -153,13 +153,13 @@ const ProfilePage = ({ profileData }) => {
             profileSingles["nft" + i]["description"] = NFTdata["description"];
             profileSingles["nft" + i]["image"] = NFTdata["image"];
           } else {
-            profileSingles["nft" + i]["name"] = "";
-            profileSingles["nft" + i]["description"] = "";
+            profileSingles["nft" + i]["name"] = "...";
+            profileSingles["nft" + i]["description"] = "...";
             profileSingles["nft" + i]["image"] = "";
           }
           profileSingleNFTs.push(profileSingles["nft" + i]);
+          setProfileSingleNFTs([...profileSingleNFTs]);
         }
-        setProfileSingleNFTs([...profileSingleNFTs]);
       }
     }
   };
@@ -181,23 +181,18 @@ const ProfilePage = ({ profileData }) => {
       if (collections["response"] === "Success") {
         let profileCollections = [];
         for (let i = 0; i < parseInt(collections["number"]); i++) {
-          let firstNFTmetadataURL = "";
+          let firstNFTimageURL = "";
           try {
-            firstNFTmetadataURL = JSON.parse(
-              collections["collection" + i]["nft_data"]
+            firstNFTimageURL = JSON.parse(
+              collections["collection" + i]["image_data"]
             )["nft0"];
           } catch {
-            firstNFTmetadataURL = "";
+            firstNFTimageURL = "";
           }
-          let NFTdata = await getNFTData(firstNFTmetadataURL);
-          if (NFTdata !== "Server error") {
-            collections["collection" + i]["image"] = NFTdata["image"];
-          } else {
-            collections["collection" + i]["image"] = "";
-          }
+          collections["collection" + i]["image"] = firstNFTimageURL;
           profileCollections.push(collections["collection" + i]);
+          setProfileCollections([...profileCollections]);
         }
-        setProfileCollections([...profileCollections]);
       }
     }
   };
@@ -440,7 +435,7 @@ export async function getServerSideProps(context) {
   return {
     props: {
       profileData: {
-        response: profiledata["response"],
+        response: "Success",
         name: profiledata["name"],
         description: profiledata["description"],
         profilepic: profiledata["profilepic"],

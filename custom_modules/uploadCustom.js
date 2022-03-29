@@ -15891,7 +15891,7 @@ const UploadSection = () => {
     return response;
   };
 
-  const saveNFTData = async (metadata_uri, contract_address) => {
+  const saveNFTData = async (metadata_uri, contract_address, imageURI) => {
     const savingURL = BASE_URL + "nft/createNFT";
     let formData = new FormData();
     formData.append("owner", account);
@@ -15903,6 +15903,8 @@ const UploadSection = () => {
     formData.append("token_id", 1);
     formData.append("price", 0);
     formData.append("network", chainId);
+    formData.append("local_token_id", 1);
+    formData.append("imageURL", imageURI);
     let response = await fetch(savingURL, {
       method: "POST",
       body: formData,
@@ -15965,7 +15967,7 @@ const UploadSection = () => {
               symbolForm.value,
               metadataURI
             );
-            await saveNFTData(metadataURI, contract_address);
+            await saveNFTData(metadataURI, contract_address, imageURI);
           } else {
             setWarning(serverErrorWarning);
           }
